@@ -60,7 +60,6 @@ function App() {
   return (
     <main className="app-shell">
       <header className="topbar">
-        <div className="brand"><span className="brand-mark">✦</span><span>{greeting}</span></div>
         <div className="header-date">{formatDate(now)}</div>
       </header>
 
