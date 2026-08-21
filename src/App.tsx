@@ -21,6 +21,8 @@ function App() {
   const [draft, setDraft] = useState<TaskDraft>(emptyDraft)
   const [notice, setNotice] = useState('')
   const [darkMode, setDarkMode] = useState(() => typeof window !== 'undefined' && localStorage.getItem('bluebell-theme') === 'dark')
+  const [userName, setUserName] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('bluebell-name') || '' : '')
+  const [nameInput, setNameInput] = useState('')
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 1000)
@@ -36,7 +38,8 @@ function App() {
 
   const sortedTasks = useMemo(() => sortTasks(tasks), [tasks])
   const activeCount = tasks.filter((task) => !task.completed).length
-  const greeting = now.getHours() < 12 ? 'Good morning' : now.getHours() < 18 ? 'Good afternoon' : 'Good evening'
+  const timeGreeting = now.getHours() < 12 ? 'Good Morning' : now.getHours() < 18 ? 'Good Afternoon' : 'Good Evening'
+  const greeting = `${timeGreeting}, ${userName}`
 
   function updateDraft(field: keyof TaskDraft, value: string | boolean) {
     setDraft((current) => ({ ...current, [field]: value }))
@@ -61,6 +64,30 @@ function App() {
 
   function deleteTask(id: string) {
     setTasks((current) => current.filter((task) => task.id !== id))
+  }
+
+  function saveName(event: FormEvent) {
+    event.preventDefault()
+    const name = nameInput.trim()
+    if (!name) return
+    localStorage.setItem('bluebell-name', name)
+    setUserName(name)
+  }
+
+  if (!userName) {
+    return <main className={`app-shell welcome-shell ${darkMode ? 'dark-mode' : ''}`}>
+      <section className="welcome-panel">
+        <div className="welcome-sparkle">✦</div>
+        <p className="eyebrow">a little space for your day</p>
+        <h1>First, tell me<br /><em>your name.</em></h1>
+        <p className="hero-copy">We will use it to make your daily welcome feel a little more like yours.</p>
+        <form className="welcome-form" onSubmit={saveName}>
+          <label>Your name<input value={nameInput} onChange={(event) => setNameInput(event.target.value)} placeholder="e.g. Carlo" autoFocus required /></label>
+          <button className="add-button" type="submit">Open my planner <span>↗</span></button>
+        </form>
+        <p className="privacy-note">Your name stays on this device.</p>
+      </section>
+    </main>
   }
 
   return (

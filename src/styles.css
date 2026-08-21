@@ -51,3 +51,13 @@ body.dark-page { background: #172b3b; }
 .dark-mode input::placeholder { color: #9ac1cd; }
 .dark-mode .add-button { background: #54abc5; }
 .dark-mode .privacy-note { color: #a0cad4; }
+.welcome-shell { display: grid; place-items: center; }
+.welcome-panel { width: min(100%, 470px); padding: 42px 44px; border: 1px solid #b9e4ef; border-radius: 8px; background: rgba(255,255,255,.72); box-shadow: 0 20px 44px rgba(74,161,190,.14); animation: rise .5s both; }
+.welcome-sparkle { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 26px; border-radius: 50%; color: white; background: #4cb9df; box-shadow: 0 7px 16px #8bd9ee; font-size: 21px; }
+.welcome-panel h1 { font-size: 54px; margin-bottom: 18px; }
+.welcome-form { margin-top: 30px; }
+.welcome-form label { display: block; color: #53849a; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 18px; }
+.dark-mode .welcome-panel { border-color: #315a70; background: #203b4e; box-shadow: 0 20px 44px rgba(0,0,0,.2); }
+.dark-mode .welcome-panel h1 { color: #e4f4fa; }
+.dark-mode .welcome-panel label { color: #a7deeb; }
+@media (max-width: 520px) { .welcome-shell { width: calc(100% - 32px); } .welcome-panel { padding: 30px 23px; } .welcome-panel h1 { font-size: 44px; } }
