@@ -6,6 +6,30 @@ import { endTime, formatDate, formatTime, isDue, sortTasks } from './lib/time'
 
 const emptyDraft = (): TaskDraft => ({ title: '', startAt: toLocalInput(new Date()), durationMinutes: null, alarm: false })
 
+function hasNotifications() {
+  return typeof window !== 'undefined' && 'Notification' in window
+}
+
+async function requestNotificationPermission() {
+  if (!hasNotifications()) return 'denied'
+  if (Notification.permission !== 'default') return Notification.permission
+  try {
+    return await Notification.requestPermission()
+  } catch {
+    return 'denied'
+  }
+}
+
+function sendNotification(title: string, body: string) {
+  if (!hasNotifications() || Notification.permission !== 'granted') return false
+  try {
+    new Notification(title, { body })
+    return true
+  } catch {
+    return false
+  }
+}
+
 function toLocalInput(date: Date) {
   const offset = date.getTimezoneOffset() * 60000
   return new Date(date.getTime() - offset).toISOString().slice(0, 16)
@@ -29,9 +53,7 @@ function App() {
     if (!dueTasks.length) return
     setTasks((current) => current.map((task) => isDue(task, now) ? { ...task, alarmHandled: true } : task))
     setNotice(`${dueTasks.length === 1 ? 'Your task is' : `${dueTasks.length} tasks are`} ready now.`)
-    if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('Bluebell reminder', { body: dueTasks.map((task) => task.title).join(', ') })
-    }
+    sendNotification('Bluebell reminder', dueTasks.map((task) => task.title).join(', '))
   }, [now, tasks])
 
   const sortedTasks = useMemo(() => sortTasks(tasks), [tasks])
@@ -45,8 +67,9 @@ function App() {
   async function addTask(event: FormEvent) {
     event.preventDefault()
     if (!draft.title.trim() || !draft.startAt) return
-    if (draft.alarm && 'Notification' in window && Notification.permission === 'default') {
-      await Notification.requestPermission()
+    if (draft.alarm) {
+      const permission = await requestNotificationPermission()
+      if (permission === 'denied') setNotice('Your task was added. Browser notifications are unavailable here, so the in-app reminder will still appear.')
     }
     const task: Task = { ...draft, title: draft.title.trim(), id: crypto.randomUUID(), completed: false, alarmHandled: false, createdAt: new Date().toISOString() }
     setTasks((current) => [...current, task])
