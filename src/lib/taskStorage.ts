@@ -15,7 +15,11 @@ export function loadTasks(): Task[] {
 }
 
 export function saveTasks(tasks: Task[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
+  } catch {
+    // Storage may be blocked by private browsing settings.
+  }
 }
 
 function isTask(value: unknown): value is Task {

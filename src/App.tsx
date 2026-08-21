@@ -43,6 +43,22 @@ const cheerUpQuotes = [
   'Something good can grow from one small beginning.',
 ]
 
+function readPreference(key: string) {
+  try {
+    return localStorage.getItem(key)
+  } catch {
+    return null
+  }
+}
+
+function savePreference(key: string, value: string) {
+  try {
+    localStorage.setItem(key, value)
+  } catch {
+    // The app can continue without saved preferences.
+  }
+}
+
 function toLocalInput(date: Date) {
   const offset = date.getTimezoneOffset() * 60000
   return new Date(date.getTime() - offset).toISOString().slice(0, 16)
@@ -53,9 +69,9 @@ function App() {
   const [tasks, setTasks] = useState<Task[]>(loadTasks)
   const [draft, setDraft] = useState<TaskDraft>(emptyDraft)
   const [notice, setNotice] = useState('')
-  const [darkMode, setDarkMode] = useState(() => typeof window !== 'undefined' && localStorage.getItem('bluebell-theme') === 'dark')
+    const [darkMode, setDarkMode] = useState(() => readPreference('bluebell-theme') === 'dark')
   const [cheerUpQuote] = useState(() => cheerUpQuotes[Math.floor(Math.random() * cheerUpQuotes.length)])
-  const [userName, setUserName] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('bluebell-name') || '' : '')
+    const [userName, setUserName] = useState(() => readPreference('bluebell-name') || '')
   const [nameInput, setNameInput] = useState('')
 
   useEffect(() => {
@@ -67,7 +83,7 @@ function App() {
 
   useEffect(() => {
     document.body.classList.toggle('dark-page', darkMode)
-    localStorage.setItem('bluebell-theme', darkMode ? 'dark' : 'light')
+      savePreference('bluebell-theme', darkMode ? 'dark' : 'light')
   }, [darkMode])
 
   const sortedTasks = useMemo(() => sortTasks(tasks), [tasks])
@@ -104,7 +120,7 @@ function App() {
     event.preventDefault()
     const name = nameInput.trim()
     if (!name) return
-    localStorage.setItem('bluebell-name', name)
+      savePreference('bluebell-name', name)
     setUserName(name)
   }
 
