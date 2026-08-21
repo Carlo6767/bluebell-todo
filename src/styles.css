@@ -54,6 +54,7 @@ body.dark-page { background: #172b3b; }
 .cheer-quote { max-width: 390px; margin: 26px 0 0; padding: 12px 0 12px 15px; border-left: 2px solid #77cde3; color: #5c8296; font: italic 16px/1.45 Fraunces, serif; }
 .dark-mode .cheer-quote { color: #b2d4df; border-color: #72c9df; }
 .welcome-shell { display: grid; place-items: center; }
+.error-shell { display: grid; place-items: center; }
 .welcome-panel { width: min(100%, 470px); padding: 42px 44px; border: 1px solid #b9e4ef; border-radius: 8px; background: rgba(255,255,255,.72); box-shadow: 0 20px 44px rgba(74,161,190,.14); animation: rise .5s both; }
 .welcome-sparkle { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 26px; border-radius: 50%; color: white; background: #4cb9df; box-shadow: 0 7px 16px #8bd9ee; font-size: 21px; }
 .welcome-panel h1 { font-size: 54px; margin-bottom: 18px; }
