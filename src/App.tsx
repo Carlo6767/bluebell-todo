@@ -20,6 +20,7 @@ function App() {
   const [tasks, setTasks] = useState<Task[]>(loadTasks)
   const [draft, setDraft] = useState<TaskDraft>(emptyDraft)
   const [notice, setNotice] = useState('')
+  const [darkMode, setDarkMode] = useState(() => typeof window !== 'undefined' && localStorage.getItem('bluebell-theme') === 'dark')
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 1000)
@@ -27,6 +28,11 @@ function App() {
   }, [])
 
   useEffect(() => saveTasks(tasks), [tasks])
+
+  useEffect(() => {
+    document.body.classList.toggle('dark-page', darkMode)
+    localStorage.setItem('bluebell-theme', darkMode ? 'dark' : 'light')
+  }, [darkMode])
 
   const sortedTasks = useMemo(() => sortTasks(tasks), [tasks])
   const activeCount = tasks.filter((task) => !task.completed).length
@@ -58,9 +64,11 @@ function App() {
   }
 
   return (
-    <main className="app-shell">
+    <main className={`app-shell ${darkMode ? 'dark-mode' : ''}`}>
       <header className="topbar">
-        <div className="header-date">{formatDate(now)}</div>
+        <button className="theme-toggle" onClick={() => setDarkMode((current) => !current)} aria-label={`Switch to ${darkMode ? 'light' : 'dark'} mode`} title={`Switch to ${darkMode ? 'light' : 'dark'} mode`}>
+          <span aria-hidden="true">{darkMode ? '☀' : '☾'}</span> {darkMode ? 'light mode' : 'dark mode'}
+        </button>
       </header>
 
       <section className="hero">
@@ -72,6 +80,7 @@ function App() {
         <div className="clock-panel" aria-label="Current time">
           <span className="clock-label">right now</span>
           <strong>{now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</strong>
+          <span className="clock-date">{formatDate(now)}</span>
           <span className="clock-pulse"><i /> live clock</span>
         </div>
       </section>
