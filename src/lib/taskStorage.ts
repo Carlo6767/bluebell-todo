@@ -8,7 +8,7 @@ export function loadTasks(): Task[] {
     if (!saved) return []
     const parsed: unknown = JSON.parse(saved)
     if (!Array.isArray(parsed)) return []
-    return parsed.filter(isTask)
+    return parsed.filter(isTask).map(normalizeTask)
   } catch {
     return []
   }
@@ -23,6 +23,13 @@ function isTask(value: unknown): value is Task {
   const task = value as Partial<Task>
   return typeof task.id === 'string' && typeof task.title === 'string' &&
     typeof task.startAt === 'string' && typeof task.completed === 'boolean' &&
-    typeof task.alarm === 'boolean' && typeof task.alarmHandled === 'boolean' &&
-    (task.durationMinutes === null || typeof task.durationMinutes === 'number')
+    typeof task.createdAt === 'string' &&
+    (typeof task.endAt === 'string' || task.endAt === undefined)
+}
+
+function normalizeTask(task: Task): Task {
+  if (task.endAt) return task
+  const legacyTask = task as Task & { durationMinutes?: number | null }
+  const duration = legacyTask.durationMinutes || 30
+  return { ...task, endAt: new Date(new Date(task.startAt).getTime() + duration * 60_000).toISOString() }
 }

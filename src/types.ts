@@ -2,11 +2,9 @@ export type Task = {
   id: string
   title: string
   startAt: string
-  durationMinutes: number | null
-  alarm: boolean
+  endAt: string
   completed: boolean
-  alarmHandled: boolean
   createdAt: string
 }
 
-export type TaskDraft = Pick<Task, 'title' | 'startAt' | 'durationMinutes' | 'alarm'>
+export type TaskDraft = Pick<Task, 'title' | 'startAt' | 'endAt'>

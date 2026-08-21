@@ -15,11 +15,3 @@ export function formatDate(value: Date) {
   return new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).format(value)
 }
 
-export function endTime(task: Task) {
-  if (!task.durationMinutes) return null
-  return formatTime(new Date(new Date(task.startAt).getTime() + task.durationMinutes * 60_000))
-}
-
-export function isDue(task: Task, now: Date) {
-  return !task.completed && task.alarm && !task.alarmHandled && new Date(task.startAt).getTime() <= now.getTime()
-}
