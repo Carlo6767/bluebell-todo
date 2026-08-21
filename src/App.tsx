@@ -10,6 +10,39 @@ const emptyDraft = (): TaskDraft => {
   return { title: '', startAt: toLocalInput(start), endAt: toLocalInput(end) }
 }
 
+const cheerUpQuotes = [
+  'Small steps still move you forward.',
+  'You are allowed to take up space and take your time.',
+  'Progress counts, even when it feels tiny.',
+  'Today does not need to be perfect to be good.',
+  'You can do hard things one gentle step at a time.',
+  'Your best looks different every day, and that is okay.',
+  'There is no rush to become who you are becoming.',
+  'You have made it through every difficult day so far.',
+  'A little progress is still progress worth celebrating.',
+  'Be proud of yourself for showing up today.',
+  'You bring something to the world that nobody else can.',
+  'Rest is part of the plan, not a failure of the plan.',
+  'You do not have to do everything today.',
+  'One kind choice for yourself can change the whole day.',
+  'The next small thing is enough for right now.',
+  'You are doing better than your tired brain tells you.',
+  'Your pace is valid. Keep going your way.',
+  'There is still something lovely waiting in today.',
+  'You are worthy of patience, especially from yourself.',
+  'A fresh start can happen at any moment.',
+  'Your effort matters, even before the result arrives.',
+  'You have permission to make today a little easier.',
+  'Keep a little room for good surprises.',
+  'You are not behind. You are on your own path.',
+  'Celebrate the things you used to wish you could do.',
+  'You can begin again without starting from nothing.',
+  'Your future self will be glad you took this step.',
+  'Let today be simple, steady, and yours.',
+  'You are more capable than this moment feels.',
+  'Something good can grow from one small beginning.',
+]
+
 function toLocalInput(date: Date) {
   const offset = date.getTimezoneOffset() * 60000
   return new Date(date.getTime() - offset).toISOString().slice(0, 16)
@@ -21,6 +54,7 @@ function App() {
   const [draft, setDraft] = useState<TaskDraft>(emptyDraft)
   const [notice, setNotice] = useState('')
   const [darkMode, setDarkMode] = useState(() => typeof window !== 'undefined' && localStorage.getItem('bluebell-theme') === 'dark')
+  const [cheerUpQuote] = useState(() => cheerUpQuotes[Math.floor(Math.random() * cheerUpQuotes.length)])
   const [userName, setUserName] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('bluebell-name') || '' : '')
   const [nameInput, setNameInput] = useState('')
 
@@ -103,6 +137,7 @@ function App() {
           <p className="eyebrow">a softer way to get things done</p>
           <h1>{greeting},<br /><em>you've got this.</em></h1>
           <p className="hero-copy">Your day, gently arranged. Add a little plan and keep your time feeling clear.</p>
+          <blockquote className="cheer-quote">“{cheerUpQuote}”</blockquote>
         </div>
         <div className="clock-panel" aria-label="Current time">
           <span className="clock-label">right now</span>
