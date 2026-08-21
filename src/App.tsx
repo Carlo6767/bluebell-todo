@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { CSSProperties, FormEvent } from 'react'
 import type { Task, TaskDraft } from './types'
 import { loadTasks, saveTasks } from './lib/taskStorage'
 import { endTime, formatDate, formatTime, isDue, sortTasks } from './lib/time'
@@ -89,7 +89,7 @@ function App() {
             <div className="status-note">{missedCount ? `${missedCount} reminder${missedCount > 1 ? 's' : ''} waiting` : 'all caught up'}</div>
           </div>
           {notice && <div className="notice" role="status"><span>✦</span>{notice}<button onClick={() => setNotice('')} aria-label="Dismiss notice">×</button></div>}
-          {sortedTasks.length === 0 ? <div className="empty-state"><div className="empty-sparkle">✧</div><h3>A blank little canvas</h3><p>What would feel good to finish today?</p></div> : <div className="task-list">{sortedTasks.map((task, index) => <article className={`task ${task.completed ? 'is-complete' : ''}`} key={task.id} style={{ '--delay': `${index * 70}ms` } as React.CSSProperties}>
+          {sortedTasks.length === 0 ? <div className="empty-state"><div className="empty-sparkle">✧</div><h3>A blank little canvas</h3><p>What would feel good to finish today?</p></div> : <div className="task-list">{sortedTasks.map((task, index) => <article className={`task ${task.completed ? 'is-complete' : ''}`} key={task.id} style={{ '--delay': `${index * 70}ms` } as CSSProperties}>
             <button className="check" onClick={() => toggleTask(task.id)} aria-label={task.completed ? `Mark ${task.title} active` : `Complete ${task.title}`}>{task.completed ? '✓' : ''}</button>
             <div className="task-time"><strong>{formatTime(task.startAt)}</strong>{endTime(task) && <span>until {endTime(task)}</span>}</div>
             <div className="task-content"><h3>{task.title}</h3><div className="task-meta">{task.durationMinutes ? <span>◷ {task.durationMinutes} min</span> : <span>open time</span>}{task.alarm && <span className="alarm">♧ reminder {task.alarmHandled ? 'sent' : 'on'}</span>}</div></div>
